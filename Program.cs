@@ -1,58 +1,74 @@
-﻿//  Задача 2: Задайте одномерный массив, заполненный случайными числами. Найдите сумму элементов, стоящих на нечётных позициях.
+﻿// Задача 2. Напишите программу, которая на вход принимает позиции элемента в двумерном
+//  массиве, 
+// и возвращает значение этого элемента или же указание, что такого элемента нет.
+// Например, задан массив:
+// 1 4 7 2
+// 5 9 2 3
+// 8 4 2 4
 
-// [3, 7, 23, 12] -> 19
+ 
 
-// [-4, -6, 89, 6] -> 0
-
-
-int InputUser(string msg)
+int[,] GenerateArray(int row, int col)
 {
-    Console.Write($"{msg} = >");
-    int userNumber = Convert.ToInt32(Console.ReadLine());
-    return userNumber;
-}
-
-int[] FillArray(int[] array)
-{
+    int[,] array = new int[row, col]; // Создаем 2-мерный массив
     Random rnd = new Random();
-    for (int i = 0; i < array.Length; i++)
+    for (int i = 0; i < array.GetLength(0); i++)
     {
-        array[i] = rnd.Next(100, 1000);
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            array[i, j] = rnd.Next(1, 20);
+        }
     }
     return array;
 }
-
-// int ShowEvenArray(int[] array)
-// {
-//     int result = 0;
-//     for (int i = 0; i < array.Length; i++)
-//     {
-//        if (array[i] % 2 ==0) result++; 
-//     }
-//     return result;
-// }
-
-void PrintArray(int[] array)
+void PrintArray(int[,] array)
 {
-    for (int i = 0; i < array.Length; i++)
+    for (int i = 0; i < array.GetLength(0); i++)
     {
-        Console.Write($"{array[i]}  ");
+        System.Console.WriteLine();
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            System.Console.Write($"{array[i, j]}\t");
+        }
     }
-    Console.WriteLine();
+    System.Console.WriteLine();
 }
 
-int SummOddIndex(int[] newArray)
+/// <summary>
+/// Метод возвращает позицию найденого значения в двумерном массиве
+/// </summary>
+/// <param name="isNotFinde">параметр возвращает найдено искомое значение или нет </param>
+/// <param name="row">строка найденной позиции</param>
+/// <param name="col">колонка найденной позиции</param>
+/// <param name="array"> двумерный массив</param>
+/// <param name="element">искомый элемент</param>
+/// <returns></returns>
+
+(bool isNotFinde, int row, int col) FindePosition(int[,] array, int element)
 {
-    int result = 0;
-    for (int i = 1; i < newArray.Length; i += 2)
+    for (int i = 0; i < array.GetLength(0); i++)
     {
-        result += newArray[i];
+        for (int j = 0; j < array.GetLength(1); j++)
+        {
+            if (element == array[i, j])
+            {
+                return (false, i, j);
+            }
+        }
     }
-    return result;
+    return (true, -1, -1);
 }
 
-int userNumber = InputUser("Введите колличество элементов массива ");
-int[] myArray = new int[userNumber];
-FillArray(myArray);
-PrintArray(myArray);
-Console.WriteLine($"Сумма  не четных элементов массива  {SummOddIndex(myArray)}");
+//Метод получения числа от пользователя 
+int InputUser(string str) 
+{ 
+    Console.Write($"{str} ="); 
+    return Convert.ToInt32(Console.ReadLine()); 
+} 
+
+int[,] matrix = GenerateArray(3, 4);
+PrintArray(matrix);
+int element = InputUser("Введите цифру которую будем искать");
+var result = FindePosition(matrix, element);
+if (result.isNotFinde) Console.WriteLine("Такого элемента нет");
+else Console.WriteLine($"индекс поискового элемента равно = ({result.row},{result.col})");
