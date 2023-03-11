@@ -1,74 +1,76 @@
-﻿// Задача 2. Напишите программу, которая на вход принимает позиции элемента в двумерном
-//  массиве, 
-// и возвращает значение этого элемента или же указание, что такого элемента нет.
-// Например, задан массив:
-// 1 4 7 2
-// 5 9 2 3
-// 8 4 2 4
+﻿// Задайте прямоугольный двумерный массив. Напишите программу, 
+//  которая будет находить строку с наименьшей суммой элементов.
 
- 
+Console.WriteLine("Введите размер массива m x n и диапазон случайных значений:");
+int m = InputNumbers("Введите m: ");
+int n = InputNumbers("Введите n: ");
+int range = InputNumbers("Введите диапазон: от 1 до ");
 
-int[,] GenerateArray(int row, int col)
+// метод выводит массив где ищет минимальное значение наименшей суммой элементов 
+
+
+int[,] array = new int[m, n];  
+CreateArray(array);
+WriteArray(array);
+
+int minSumLine = 0;
+int sumLine = SumLineElements(array, 0);
+for (int i = 0; i < array.GetLength(0); i++)
 {
-    int[,] array = new int[row, col]; // Создаем 2-мерный массив
-    Random rnd = new Random();
+    int tempSumLine = SumLineElements(array, i);
+    if (sumLine > tempSumLine)
+    {
+        sumLine = tempSumLine;
+        minSumLine = i;
+    }
+}
+
+// метод который суммирует строки 
+
+int SumLineElements(int[,] array, int i)
+{
+    int sumLine = array[i, 0];
+    for(int j = 0; j < array.GetLength(0); j++)
+    {
+        sumLine += array[i, j];
+    }
+    return sumLine;
+}
+
+
+int InputNumbers(string input)
+{
+    Console.Write(input);
+    int output = Convert.ToInt32(Console.ReadLine());
+    return output;
+}
+
+void CreateArray(int[,] array)
+{
     for (int i = 0; i < array.GetLength(0); i++)
     {
         for (int j = 0; j < array.GetLength(1); j++)
         {
-            array[i, j] = rnd.Next(1, 20);
+            array[i, j] = new Random().Next(range);
         }
     }
-    return array;
-}
-void PrintArray(int[,] array)
-{
-    for (int i = 0; i < array.GetLength(0); i++)
-    {
-        System.Console.WriteLine();
-        for (int j = 0; j < array.GetLength(1); j++)
-        {
-            System.Console.Write($"{array[i, j]}\t");
-        }
-    }
-    System.Console.WriteLine();
 }
 
-/// <summary>
-/// Метод возвращает позицию найденого значения в двумерном массиве
-/// </summary>
-/// <param name="isNotFinde">параметр возвращает найдено искомое значение или нет </param>
-/// <param name="row">строка найденной позиции</param>
-/// <param name="col">колонка найденной позиции</param>
-/// <param name="array"> двумерный массив</param>
-/// <param name="element">искомый элемент</param>
-/// <returns></returns>
-
-(bool isNotFinde, int row, int col) FindePosition(int[,] array, int element)
+ // метод который читает массив 
+void WriteArray(int[,] array)
 {
     for (int i = 0; i < array.GetLength(0); i++)
     {
         for (int j = 0; j < array.GetLength(1); j++)
         {
-            if (element == array[i, j])
-            {
-                return (false, i, j);
-            }
+            Console.Write(array[i, j] + " ");
         }
+        Console.WriteLine();
     }
-    return (true, -1, -1);
 }
 
-//Метод получения числа от пользователя 
-int InputUser(string str) 
-{ 
-    Console.Write($"{str} ="); 
-    return Convert.ToInt32(Console.ReadLine()); 
-} 
+Console.WriteLine($"\n{minSumLine + 1} - строкa с наименьшей суммой ({sumLine}) элементов ");
+CreateArray(array);
+ WriteArray(array);
 
-int[,] matrix = GenerateArray(3, 4);
-PrintArray(matrix);
-int element = InputUser("Введите цифру которую будем искать");
-var result = FindePosition(matrix, element);
-if (result.isNotFinde) Console.WriteLine("Такого элемента нет");
-else Console.WriteLine($"индекс поискового элемента равно = ({result.row},{result.col})");
+
